@@ -18,5 +18,6 @@ public class MainController {
         ui.MyGUI();
         ui.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         ui.setVisible(true);
+        System.out.println("Trueeee");
     }
 }
