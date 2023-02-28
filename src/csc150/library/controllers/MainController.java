@@ -15,9 +15,6 @@ public class MainController {
     FileController file = new FileController();
 
     public void run() {
-        ui.MyGUI();
-        ui.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        ui.setVisible(true);
-        System.out.println("Trueeee");
+        ui.makeWindow();
     }
 }
