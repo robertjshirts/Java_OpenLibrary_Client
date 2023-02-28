@@ -139,6 +139,7 @@ public class FileController {
     }
 
     public boolean doesFileExist(String fileName){
+        createRootFolder();
         File rootFolder = new File(ROOT_FOLDER);
         List<String> files = Arrays.asList(rootFolder.list());
         for (int i = 0; i < files.size(); i++) {
