@@ -7,10 +7,16 @@
 package csc150.library.views;
 
 import csc150.library.controllers.FileController;
+import csc150.library.controllers.LibraryClient;
 import csc150.library.controllers.MainController;
+import csc150.library.models.Book;
+import csc150.library.models.KeyPossibilities;
 
 import javax.swing.*;
 import java.awt.*;
+import java.util.List;
+
+import static csc150.library.models.KeyPossibilities.*;
 
 public class LibraryUI {
 
@@ -52,13 +58,14 @@ public class LibraryUI {
 
         JButton personalLibrary = new JButton("Go to personal library");
         personalLibrary.addActionListener(e -> {
-            // update ui to go to personal library and display that
+            // displays the window for personal library
             displayPersonalLibrary();
         });
 
         JButton search = new JButton("Search");
         search.addActionListener(e -> {
            // use the client to search for a book and display the information
+            displaySearch(textField.getText());
         });
 
         // adds elements to panel
@@ -76,6 +83,8 @@ public class LibraryUI {
      * Display your personal library
      */
     private void displayPersonalLibrary(){
+
+        //makes a new runnable for the page
         FileController files = new FileController();
         EventQueue.invokeLater(new Runnable() {
             @Override
@@ -90,8 +99,10 @@ public class LibraryUI {
                 JPanel contentPanel = new JPanel();
                 contentPanel.setLayout(new BoxLayout(contentPanel, BoxLayout.Y_AXIS));
 
+                //TODO add content from file manager here
                 //gets the content for the window
                 JLabel contentLabel1 = new JLabel(FileController.FAVORITES);
+                contentLabel1.setBackground(Color.gray);
                 JLabel contentLabel2 = new JLabel(FileController.READING);
                 JLabel contentLabel3 = new JLabel(FileController.HASREAD);
                 JLabel contentLabel4 = new JLabel(FileController.PLAN_TO_READ);
@@ -112,5 +123,48 @@ public class LibraryUI {
             }
         });
     }
-}
 
+    private void displaySearch(String search){
+        LibraryClient client = new LibraryClient();
+        List<Book> books = client.getBookByTitleSearch(search);
+        for (int i = 0; i < books.size(); i++) {
+            System.out.println(books.get(i).toString());
+        }
+
+        // makes a new runnable for the window
+        EventQueue.invokeLater(new Runnable() {
+            @Override
+            public void run() {
+
+                //makes the window
+                JFrame window = new JFrame("Search results");
+                window.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+
+                //makes panel and set layout
+                JPanel mainPanel = new JPanel();
+                mainPanel.setLayout(new BoxLayout(mainPanel, BoxLayout.Y_AXIS));
+
+                //gets the search for the book
+                for (int i = 0; i < books.size(); i++) {
+                    JTextArea textArea = new JTextArea();
+                    //todo fix median pages
+                    Book book = books.get(i);
+                    textArea.setText("Title:" + book.getTitle() + "\n" + "Author: " + book.getAuthorNames() + "\n" + "Publisher: " + book.getPublisher() + "\n" + "Subjects: " + book.getSubjects() + "\n" + "Median pages" + "\n\n");
+                    mainPanel.add(textArea);
+                }
+
+                JScrollPane scroller = new JScrollPane();
+                scroller.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
+                scroller.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_ALWAYS);
+                mainPanel.add(scroller);
+
+                //set panel to the window
+                window.getContentPane().add(mainPanel);
+
+                //sets the size and makes window visible
+                window.setSize(700, 700);
+                window.setVisible(true);
+            }
+        });
+    }
+}
