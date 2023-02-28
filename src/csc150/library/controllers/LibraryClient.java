@@ -30,7 +30,7 @@ public class LibraryClient {
      */
     public List<Book> getBookByTitleSearch(List<KeyPossibilities> keys, String title) {
         // Retrieve page content based on formatted search
-        String pageContent = getPageContent("search.json?title=" + title);
+        String pageContent = getPageContent("search.json?title=" + title.replace(" ", "+"));
         // Return array
         return formatPageContent(keys, pageContent);
     }
@@ -42,7 +42,7 @@ public class LibraryClient {
      */
     public List<Book> getBookByTitleSearch(String title) {
         // Retrieve page content based on formatted search
-        String pageContent = getPageContent("search.json?title=" + title);
+        String pageContent = getPageContent("search.json?title=" + title.replace(" ", "+"));
         // Return array
         // Pass in all KeyPossibilities
         return formatPageContent(List.of(KeyPossibilities.values()), pageContent);
@@ -58,7 +58,7 @@ public class LibraryClient {
         //TODO: add checkISBN function
 
         // Retrieve page content based on formatted search
-        String pageContent = getPageContent("search.json?q=" + isbn);
+        String pageContent = getPageContent("search.json?q=" + isbn.trim());
         // Get the first (and only) element from the returned array
         return Objects.requireNonNull(formatPageContent(keys, pageContent)).get(0);
     }
@@ -72,7 +72,7 @@ public class LibraryClient {
         //TODO: add checkISBN function
 
         // Retrieve page content based on formatted search
-        String pageContent = getPageContent("search.json?q=" + isbn);
+        String pageContent = getPageContent("search.json?q=" + isbn.trim());
         // Get the first (and only) element from the returned array
         // Pass in all KeyPossibilities
         return Objects.requireNonNull(formatPageContent(List.of(KeyPossibilities.values()), pageContent)).get(0);
@@ -205,4 +205,16 @@ public class LibraryClient {
         }
         return book;
     }
+
+//    private boolean checkISBN(String isbnString) {
+//        try {
+//            int total = 0;
+//            for (int i = (isbnString.length() -1), int j = 0; i >= 0; i--, j++) {
+//                total += (i+1) * isbnString.charAt();
+//            }
+//
+//        } catch (NumberFormatException ex) {
+//            return false;
+//        }
+//    }
 }
