@@ -212,12 +212,12 @@ public class LibraryClient {
                     try {
                         ArrayList<String> publisherAsString = new ArrayList<>();
                         JsonNode publisherAsJson = jsonNode.get(KeyPossibilities.PUBLISHER.toString());
-                        for (JsonNode author : publisherAsJson) {
-                            publisherAsString.add(author.asText());
+                        for (JsonNode publisher : publisherAsJson) {
+                            publisherAsString.add(publisher.asText());
                         }
 
                         // Assigns list to book object
-                        book.setAuthorNames(publisherAsString);
+                        book.setPublisher(publisherAsString);
                     } catch (Exception ignored) { }
                 }
             }
