@@ -7,13 +7,16 @@
 package csc150.library.controllers;
 
 import java.io.*;
+import java.lang.reflect.Array;
+import java.util.Arrays;
+import java.util.List;
 
 public class FileController {
     //TODO make sure this works
     //names of the files and root folder
     public static final String ROOT_FOLDER = "BookShelf";
     public static final String FAVORITES = "Favorites";
-    public static final String HASREAD = "HasRed";
+    public static final String HAS_READ = "HasRed";
     public static final String PLAN_TO_READ = "PlaneToRead";
     public static final String READING = "Reading";
 
@@ -133,5 +136,16 @@ public class FileController {
                 System.out.println(e.getMessage());
             }
         }
+    }
+
+    public boolean doesFileExist(String fileName){
+        File rootFolder = new File(ROOT_FOLDER);
+        List<String> files = Arrays.asList(rootFolder.list());
+        for (int i = 0; i < files.size(); i++) {
+           if (files.get(i).equals(getFileName(fileName))){
+               return true;
+           }
+        }
+        return false;
     }
 }

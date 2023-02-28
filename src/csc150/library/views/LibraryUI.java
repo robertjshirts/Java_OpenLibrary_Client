@@ -20,6 +20,7 @@ import java.util.List;
 import static csc150.library.models.KeyPossibilities.*;
 
 public class LibraryUI {
+    FileController files = new FileController();
 
     /**
      * Make the gui window for the openLibrary clint
@@ -86,7 +87,6 @@ public class LibraryUI {
     private void displayPersonalLibrary(){
 
         //makes a new runnable for the page
-        FileController files = new FileController();
         EventQueue.invokeLater(new Runnable() {
             @Override
             public void run() {
@@ -125,6 +125,10 @@ public class LibraryUI {
         });
     }
 
+    /**
+     * Makes a window showing all search results pulled from the openLibrary api
+     * @param search the term the user is using to search through the openLibrary api
+     */
     private void displaySearch(String search){
 
         // get a list of books from the library client
@@ -146,7 +150,7 @@ public class LibraryUI {
                 JScrollPane scrollPane = new JScrollPane(mainPanel);
 
 
-                //gets the search for the book
+                //gets the search for the book and displays them
                 for (int i = 0; i < books.size(); i++) {
                     JPanel buttonPanel = new JPanel();
                     buttonPanel.setLayout(new FlowLayout(FlowLayout.LEFT));
@@ -155,19 +159,23 @@ public class LibraryUI {
                     textArea.setText("Title:" + book.getTitle() + "\n" + "Author: " + book.getAuthorNames() + "\n" + "Publisher: " + book.getPublisher() + "\n" + "First publish year: " + book.getFirstPublishYear() + "\n" + "Subjects: " + book.getSubjects() + "\n" + "Median pages: " + book.getMedianPages() + "\n\n");
                     JButton favorite = new JButton("Add to favorites");
                     favorite.addActionListener(e -> {
-                        System.out.println(textArea.getText());
+                        boolean append = files.doesFileExist(FileController.FAVORITES);
+                        files.writeFile(FileController.FAVORITES, textArea.getText(), append);
                     });
                     JButton reading = new JButton("Add to reading");
                     reading.addActionListener(e -> {
-                        System.out.println(textArea.getText());
+                        boolean append = files.doesFileExist(FileController.READING);
+                        files.writeFile(FileController.READING, textArea.getText(), append);
                     });
                     JButton hasRead = new JButton("Add to Has Read");
                     hasRead.addActionListener(e -> {
-                        System.out.println(textArea.getText());
+                        boolean append = files.doesFileExist(FileController.HAS_READ);
+                        files.writeFile(FileController.HAS_READ, textArea.getText(), append);
                     });
                     JButton planToRead = new JButton("Add to Plan To Read");
                     planToRead.addActionListener(e -> {
-                        System.out.println(textArea.getText());
+                        boolean append = files.doesFileExist(FileController.PLAN_TO_READ);
+                        files.writeFile(FileController.PLAN_TO_READ, textArea.getText(), append);
                     });
                     buttonPanel.add(favorite);
                     buttonPanel.add(reading);
