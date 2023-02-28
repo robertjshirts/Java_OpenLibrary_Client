@@ -105,7 +105,7 @@ public class LibraryUI {
                 JLabel contentLabel1 = new JLabel(FileController.FAVORITES);
                 contentLabel1.setBackground(Color.gray);
                 JLabel contentLabel2 = new JLabel(FileController.READING);
-                JLabel contentLabel3 = new JLabel(FileController.HASREAD);
+                JLabel contentLabel3 = new JLabel(FileController.HAS_READ);
                 JLabel contentLabel4 = new JLabel(FileController.PLAN_TO_READ);
 
                 //sets the content to the panels
