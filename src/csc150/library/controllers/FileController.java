@@ -10,10 +10,12 @@ import java.io.*;
 
 public class FileController {
     //TODO make sure this works
+    //names of the files and root folder
     public static final String ROOT_FOLDER = "BookShelf";
-    public static final String Favorites = "Favorites";
-    public static final String hasRead = "HasRed";
-    public static final String planToRead = "PlaneToRead";
+    public static final String FAVORITES = "Favorites";
+    public static final String HASREAD = "HasRed";
+    public static final String PLAN_TO_READ = "PlaneToRead";
+    public static final String READING = "Reading";
 
 
     /**
