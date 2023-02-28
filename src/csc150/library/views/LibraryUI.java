@@ -6,6 +6,7 @@
  */
 package csc150.library.views;
 
+import csc150.library.Main;
 import csc150.library.controllers.FileController;
 import csc150.library.controllers.LibraryClient;
 import csc150.library.controllers.MainController;
@@ -125,11 +126,10 @@ public class LibraryUI {
     }
 
     private void displaySearch(String search){
+
+        // get a list of books from the library client
         LibraryClient client = new LibraryClient();
         List<Book> books = client.getBookByTitleSearch(search);
-        for (int i = 0; i < books.size(); i++) {
-            System.out.println(books.get(i).toString());
-        }
 
         // makes a new runnable for the window
         EventQueue.invokeLater(new Runnable() {
@@ -143,26 +143,45 @@ public class LibraryUI {
                 //makes panel and set layout
                 JPanel mainPanel = new JPanel();
                 mainPanel.setLayout(new BoxLayout(mainPanel, BoxLayout.Y_AXIS));
+                JScrollPane scrollPane = new JScrollPane(mainPanel);
+
 
                 //gets the search for the book
                 for (int i = 0; i < books.size(); i++) {
+                    JPanel buttonPanel = new JPanel();
+                    buttonPanel.setLayout(new FlowLayout(FlowLayout.LEFT));
                     JTextArea textArea = new JTextArea();
-                    //todo fix median pages
                     Book book = books.get(i);
-                    textArea.setText("Title:" + book.getTitle() + "\n" + "Author: " + book.getAuthorNames() + "\n" + "Publisher: " + book.getPublisher() + "\n" + "Subjects: " + book.getSubjects() + "\n" + "Median pages" + "\n\n");
+                    textArea.setText("Title:" + book.getTitle() + "\n" + "Author: " + book.getAuthorNames() + "\n" + "Publisher: " + book.getPublisher() + "\n" + "First publish year: " + book.getFirstPublishYear() + "\n" + "Subjects: " + book.getSubjects() + "\n" + "Median pages: " + book.getMedianPages() + "\n\n");
+                    JButton favorite = new JButton("Add to favorites");
+                    favorite.addActionListener(e -> {
+                        System.out.println(textArea.getText());
+                    });
+                    JButton reading = new JButton("Add to reading");
+                    reading.addActionListener(e -> {
+                        System.out.println(textArea.getText());
+                    });
+                    JButton hasRead = new JButton("Add to Has Read");
+                    hasRead.addActionListener(e -> {
+                        System.out.println(textArea.getText());
+                    });
+                    JButton planToRead = new JButton("Add to Plan To Read");
+                    planToRead.addActionListener(e -> {
+                        System.out.println(textArea.getText());
+                    });
+                    buttonPanel.add(favorite);
+                    buttonPanel.add(reading);
+                    buttonPanel.add(hasRead);
+                    buttonPanel.add(planToRead);
                     mainPanel.add(textArea);
+                    mainPanel.add(buttonPanel);
                 }
 
-                JScrollPane scroller = new JScrollPane();
-                scroller.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
-                scroller.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_ALWAYS);
-                mainPanel.add(scroller);
-
                 //set panel to the window
-                window.getContentPane().add(mainPanel);
+                window.getContentPane().add(scrollPane);
 
                 //sets the size and makes window visible
-                window.setSize(700, 700);
+                window.setExtendedState(JFrame.MAXIMIZED_BOTH);
                 window.setVisible(true);
             }
         });
