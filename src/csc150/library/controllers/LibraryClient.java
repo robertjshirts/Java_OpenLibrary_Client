@@ -26,11 +26,12 @@ public class LibraryClient {
      * Searches OpenLibrary for a book based on a title and returns certain data
      * @param keys the data you want from each book
      * @param title the title you are searching for
+     * @param limit the max number of books you want to retrieve
      * @return a list of Book objects with the requested key data assigned to each
      */
-    public List<Book> getBookByTitleSearch(List<KeyPossibilities> keys, String title) {
+    public List<Book> getBookByTitleSearch(List<KeyPossibilities> keys, String title, int limit) {
         // Retrieve page content based on formatted search
-        String pageContent = getPageContent("search.json?title=" + title.replace(" ", "+"));
+        String pageContent = getPageContent("search.json?title=" + title.replace(" ", "+") + "&limit=" + limit);
         // Return array
         return formatPageContent(keys, pageContent);
     }
@@ -38,11 +39,12 @@ public class LibraryClient {
     /**
      * Searches OpenLibrary for a book based on a title and all relevant data
      * @param title the title you are searching for
+     * @param limit the max number of books you want to retrieve
      * @return a list of Book objects
      */
-    public List<Book> getBookByTitleSearch(String title) {
+    public List<Book> getBookByTitleSearch(String title, int limit) {
         // Retrieve page content based on formatted search
-        String pageContent = getPageContent("search.json?title=" + title.replace(" ", "+"));
+        String pageContent = getPageContent("search.json?title=" + title.replace(" ", "+") + "&limit" + limit);
         // Return array
         // Pass in all KeyPossibilities
         return formatPageContent(List.of(KeyPossibilities.values()), pageContent);
@@ -102,6 +104,7 @@ public class LibraryClient {
             // Return the array of books
             return books;
         } catch (Exception ex) {
+            System.out.println(ex.getMessage());
             return null;
         }
     }
@@ -156,50 +159,68 @@ public class LibraryClient {
             // Retrieve data based on key type
             switch (key) {
                 // Sets title to the key value "title"
-                case TITLE -> book.setTitle(jsonNode.get(KeyPossibilities.TITLE.toString()).asText());
+                case TITLE -> {
+                    try {
+                        book.setTitle(jsonNode.get(KeyPossibilities.TITLE.toString()).asText());
+                    } catch (Exception ignored) { }
+                }
 
                 // Sets publish year to key value "first_publish_year"
-                case FIRST_PUBLISH_YEAR -> book.setFirstPublishYear(jsonNode.get(
-                        KeyPossibilities.FIRST_PUBLISH_YEAR.toString()).asInt());
+                case FIRST_PUBLISH_YEAR -> {
+                    try {
+                        book.setFirstPublishYear(jsonNode.get(
+                                KeyPossibilities.FIRST_PUBLISH_YEAR.toString()).asInt());
+                    } catch (Exception ignored) { }
+                }
 
                 // Sets median pages to key value "number_of_pages_median"
-                case NUMBER_OF_PAGES_MEDIAN -> book.setMedianPages(jsonNode.get(
-                        KeyPossibilities.NUMBER_OF_PAGES_MEDIAN.toString()).asInt());
+                case NUMBER_OF_PAGES_MEDIAN -> {
+                    try {
+                        book.setMedianPages(jsonNode.get(
+                                KeyPossibilities.NUMBER_OF_PAGES_MEDIAN.toString()).asInt());
+                    } catch (Exception ignored) { }
+                }
 
                 // Sets subject list equal to all values under key "subject"
                 case SUBJECT -> {
-                    ArrayList<String> subjectsAsString = new ArrayList<>();
-                    JsonNode subjectsAsJson = jsonNode.get(KeyPossibilities.SUBJECT.toString());
-                    for (JsonNode subject : subjectsAsJson) {
-                        subjectsAsString.add(subject.asText());
-                    }
+                    try {
+                            ArrayList<String> subjectsAsString = new ArrayList<>();
+                            JsonNode subjectsAsJson = jsonNode.get(KeyPossibilities.SUBJECT.toString());
+                            for (JsonNode subject : subjectsAsJson) {
+                                subjectsAsString.add(subject.asText());
+                            }
 
-                    // Assigns list to book object
-                    book.setSubjects(subjectsAsString);
+                        // Assigns list to book object
+                        book.setSubjects(subjectsAsString);
+                        } catch (Exception ignored) { }
                 }
 
                 // Sets author list equal to all values under key "author_name"
                 case AUTHOR_NAME -> {
-                    ArrayList<String> authorsAsString = new ArrayList<>();
-                    JsonNode authorsAsJson = jsonNode.get(KeyPossibilities.AUTHOR_NAME.toString());
-                    for (JsonNode author : authorsAsJson) {
-                        authorsAsString.add(author.asText());
-                    }
+                    try {
+                        ArrayList<String> authorsAsString = new ArrayList<>();
+                        JsonNode authorsAsJson = jsonNode.get(KeyPossibilities.AUTHOR_NAME.toString());
+                        for (JsonNode author : authorsAsJson) {
+                            authorsAsString.add(author.asText());
+                        }
 
-                    // Assigns list to book object
-                    book.setAuthorNames(authorsAsString);
+                        // Assigns list to book object
+                        book.setAuthorNames(authorsAsString);
+                    } catch (Exception ignored) { }
                 }
 
                 // Sets publisher list equal to all values under key "publisher"
                 case PUBLISHER -> {
-                    ArrayList<String> publisherAsString = new ArrayList<>();
-                    JsonNode publisherAsJson = jsonNode.get(KeyPossibilities.PUBLISHER.toString());
-                    for (JsonNode author : publisherAsJson) {
-                        publisherAsString.add(author.asText());
-                    }
+                    try {
+                        ArrayList<String> publisherAsString = new ArrayList<>();
+                        JsonNode publisherAsJson = jsonNode.get(KeyPossibilities.PUBLISHER.toString());
+                        for (JsonNode author : publisherAsJson) {
+                            publisherAsString.add(author.asText());
+                        }
 
-                    // Assigns list to book object
-                    book.setAuthorNames(publisherAsString);
+                        // Assigns list to book object
+                        book.setAuthorNames(publisherAsString);
+                    } catch (Exception ignored) { }
                 }
             }
         }
@@ -209,8 +230,8 @@ public class LibraryClient {
 //    private boolean checkISBN(String isbnString) {
 //        try {
 //            int total = 0;
-//            for (int i = (isbnString.length() -1), int j = 0; i >= 0; i--, j++) {
-//                total += (i+1) * isbnString.charAt();
+//            for (int i = (isbnString.length() -1), j = 0; i >= 0; i--, j++) {
+//                total += (i+1) * Integer.parseInt(isbnString.charAt(j));
 //            }
 //
 //        } catch (NumberFormatException ex) {
