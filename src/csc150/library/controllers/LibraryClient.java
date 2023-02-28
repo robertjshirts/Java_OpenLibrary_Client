@@ -36,6 +36,19 @@ public class LibraryClient {
     }
 
     /**
+     * Searches OpenLibrary for a book based on a title and all relevant data
+     * @param title the title you are searching for
+     * @return a list of Book objects
+     */
+    public List<Book> getBookByTitleSearch(String title) {
+        // Retrieve page content based on formatted search
+        String pageContent = getPageContent("search.json?title=" + title);
+        // Return array
+        // Pass in all KeyPossibilities
+        return formatPageContent(List.of(KeyPossibilities.values()), pageContent);
+    }
+
+    /**
      * Searches OpenLibrary for a book based on the ISBN and returns certain data
      * @param keys the data you want from the book
      * @param isbn the isbn you are searching for
@@ -48,6 +61,21 @@ public class LibraryClient {
         String pageContent = getPageContent("search.json?q=" + isbn);
         // Get the first (and only) element from the returned array
         return Objects.requireNonNull(formatPageContent(keys, pageContent)).get(0);
+    }
+
+    /**
+     * Searches OpenLibrary for a book based on the ISBN and returns all relevant data
+     * @param isbn the isbn you are searching for
+     * @return a Book object
+     */
+    public Book getBookByISBN(String isbn) {
+        //TODO: add checkISBN function
+
+        // Retrieve page content based on formatted search
+        String pageContent = getPageContent("search.json?q=" + isbn);
+        // Get the first (and only) element from the returned array
+        // Pass in all KeyPossibilities
+        return Objects.requireNonNull(formatPageContent(List.of(KeyPossibilities.values()), pageContent)).get(0);
     }
 
     /**
