@@ -26,12 +26,11 @@ public class LibraryClient {
      * Searches OpenLibrary for a book based on a title and returns certain data
      * @param keys the data you want from each book
      * @param title the title you are searching for
-     * @param limit the max number of books you want to retrieve
      * @return a list of Book objects with the requested key data assigned to each
      */
     public List<Book> getBookByTitleSearch(List<KeyPossibilities> keys, String title, int limit) {
         // Retrieve page content based on formatted search
-        String pageContent = getPageContent("search.json?title=" + title.replace(" ", "+") + "&limit=" + limit);
+        String pageContent = getPageContent("search.json?title=" + title.replace(" ", "+"));
         // Return array
         return formatPageContent(keys, pageContent);
     }
@@ -39,12 +38,11 @@ public class LibraryClient {
     /**
      * Searches OpenLibrary for a book based on a title and all relevant data
      * @param title the title you are searching for
-     * @param limit the max number of books you want to retrieve
      * @return a list of Book objects
      */
-    public List<Book> getBookByTitleSearch(String title, int limit) {
+    public List<Book> getBookByTitleSearch(String title) {
         // Retrieve page content based on formatted search
-        String pageContent = getPageContent("search.json?title=" + title.replace(" ", "+") + "&limit" + limit);
+        String pageContent = getPageContent("search.json?title=" + title.replace(" ", "+"));
         // Return array
         // Pass in all KeyPossibilities
         return formatPageContent(List.of(KeyPossibilities.values()), pageContent);
