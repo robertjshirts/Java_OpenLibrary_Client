@@ -11,7 +11,6 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 
 import com.fasterxml.jackson.databind.JsonNode;
@@ -19,62 +18,59 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import csc150.library.models.Book;
 
 public class HTTPController {
+    //TODO: Restructure this whole ass thing i fucked it up lmao
 
     public void run() {
-        List<Book> rsurs = searchByTitle("red seas under red skies");
-        for (Book rsur : rsurs) {
-            System.out.println(rsur.toString());
+        List<Book> result = searchByAuthor("Scott Lynch");
+        for (Book res : result) {
+            System.out.println(res.toString());
         }
+        System.out.println(searchByISBN("0451526538"));
     }
 
+    public Book searchByISBN(String query) {
 
-    public void getAuthor(String author){
-        // Replaces all spaces with %20 for search query
-        author = author.replace(" ", "%20");
-    }
-
-    /**
-     * searches openlibray for a book title
-     * @param searchTitle the title of the book the user is trying to find
-     */
-    public List<Book> searchByTitle(String searchTitle) {
-        searchTitle = searchTitle.replace(" ", "+");
-        System.out.println(searchTitle);
-        return makeRequest("title=" + searchTitle);
+//        List<Book> books = makeRequestBySearch("isbn/" + query + ".json");
+        return null;
     }
 
     /**
-     * make a request to the openlibrary api
-     * @param query the type of search you want to request from the openlibrary api
-     * @return the json request gotten from the openlibrary api formatted as a string
+     * searches opel library for an author
+     * @param query the author the user is searching for
+     * @return the search result as a list of books
      */
-    private List<Book> makeRequest(String query){
+    public List<Book> searchByAuthor(String query){
+        query = query.replace(" ", "%20");
+        System.out.println(query);
+//        return makeRequestBySearch("search.json?author="+query);
+        return null;
+    }
+
+    /**
+     * searches open library for a book title
+     * @param query the title of the book the user is trying to find
+     * @return the search result as a list of books
+     */
+    public List<Book> searchByTitle(String query) {
+        query = query.replace(" ", "+");
+        System.out.println(query);
+//        return makeRequestBySearch("search.json?title=" + query);
+        return null;
+    }
+
+    /**
+     * make a request to the open library api
+     * @param query the formatted queries to add at the end of the search
+     * @return the json request gotten from the open library api formatted as a list of book objects
+     */
+    private List<Book> makeRequestBySearch(String query, String[] keys){
         try {
-            // Create a URL object for the endpoint you want to hit
-            System.out.println("https://openlibrary.org/search.json?" + query);
-            URL url = new URL("https://openlibrary.org/search.json?" + query);
-
-            // Open a connection to the URL
-            HttpURLConnection connection = (HttpURLConnection) url.openConnection();
-
-            // Set the request method to GET
-            connection.setRequestMethod("GET");
-
-            // Set the Accept header to "application/json"
-            connection.setRequestProperty("Accept", "application/json");
-
-            // Read the response
-            BufferedReader in = new BufferedReader(new InputStreamReader(connection.getInputStream()));
-            String inputLine;
-            StringBuilder response = new StringBuilder();
-            while ((inputLine = in.readLine()) != null) {
-                response.append(inputLine);
-            }
-            in.close();
+            //get page content from url
+            String response = getPageContent(query);
 
             //initialize JSON node from response
             ObjectMapper objectMapper = new ObjectMapper();
-            JsonNode jsonNode = objectMapper.readTree(response.toString());
+            JsonNode jsonNode = objectMapper.readTree(response);
             JsonNode docs = jsonNode.get("docs");
 
             List<Book> booksFoundAsObject = new ArrayList<>();
@@ -87,6 +83,11 @@ public class HTTPController {
                 int medianPages = -1;
 
                 //have to wrap in try block if the key doesn't exist
+//                for (String key : keys) {
+//                    try {
+//                        doc.get(key).asText();
+//                    } catch (Exception ignored) { }
+//                }
                 try {
                     title = doc.get("title").asText();
                 } catch (Exception ignored) { }
@@ -122,5 +123,29 @@ public class HTTPController {
             System.out.println("Error: " + e.getMessage());
             return null;
         }
+    }
+
+    private String getPageContent(String urlString) throws IOException {
+        //create an url object for request to hit
+        System.out.println("https://openlibrary.org/" + urlString);
+        URL url = new URL("https://openlibrary.org/" + urlString);
+        // Open a connection to the URL
+        HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+
+        // Set the request method to GET
+        connection.setRequestMethod("GET");
+
+        // Set the Accept header to "application/json"
+        connection.setRequestProperty("Accept", "application/json");
+
+        // Read the response
+        BufferedReader in = new BufferedReader(new InputStreamReader(connection.getInputStream()));
+        String inputLine;
+        StringBuilder response = new StringBuilder();
+        while ((inputLine = in.readLine()) != null) {
+            response.append(inputLine);
+        }
+        in.close();
+        return response.toString();
     }
 }
