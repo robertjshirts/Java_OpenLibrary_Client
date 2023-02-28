@@ -22,6 +22,8 @@ import csc150.library.models.KeyPossibilities;
 public class LibraryClient {
     public final String CLIENT_ADDRESS = "https://openlibrary.org/";
 
+    //TODO: Add a sort
+
     /**
      * Searches OpenLibrary for a book based on a title and returns certain data
      * @param keys the data you want from each book
