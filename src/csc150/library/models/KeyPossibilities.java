@@ -1,5 +1,5 @@
 /**
- * @author rshirts
+ * @author rshirts dthompson
  * @createdOn 2/28/2023 at 11:01 AM
  * @projectName LibraryV4
  * @packageName csc150.library.models;

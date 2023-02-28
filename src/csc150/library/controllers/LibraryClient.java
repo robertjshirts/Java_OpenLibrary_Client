@@ -1,5 +1,5 @@
 /**
- * @author rshirts
+ * @author rshirts dthompson
  * @createdOn 2/27/2023 at 12:57 PM
  * @projectName LibraryV4
  * @packageName csc150.library.controllers;
@@ -22,7 +22,11 @@ import csc150.library.models.KeyPossibilities;
 public class LibraryClient {
     public final String CLIENT_ADDRESS = "https://openlibrary.org/";
 
-    //TODO: Add a sort
+    public List<Book> getBookByAuthorSearch(List<KeyPossibilities> keys, String author) {
+        // Retrieve page content based on formatted search
+//        String pageContent = getPageContent("search.json?author");
+        return null;
+    }
 
     /**
      * Searches OpenLibrary for a book based on a title and returns certain data
@@ -31,8 +35,12 @@ public class LibraryClient {
      * @return a list of Book objects with the requested key data assigned to each
      */
     public List<Book> getBookByTitleSearch(List<KeyPossibilities> keys, String title) {
+        // Ensure search term is valid
+        if (title == null || title.isBlank()) {
+            return null;
+        }
         // Retrieve page content based on formatted search
-        String pageContent = getPageContent("search.json?title=" + title.replace(" ", "+"));
+        String pageContent = getPageContent("search.json?title=" + title.replace(" ", "+") + "&sort=editions");
         // Return array
         return formatPageContent(keys, pageContent);
     }
@@ -43,11 +51,8 @@ public class LibraryClient {
      * @return a list of Book objects
      */
     public List<Book> getBookByTitleSearch(String title) {
-        // Retrieve page content based on formatted search
-        String pageContent = getPageContent("search.json?title=" + title.replace(" ", "+"));
-        // Return array
-        // Pass in all KeyPossibilities
-        return formatPageContent(List.of(KeyPossibilities.values()), pageContent);
+        // Calls the original function but with all KeyPossibilities
+        return (getBookByTitleSearch(List.of(KeyPossibilities.values()), title));
     }
 
     /**
@@ -57,7 +62,10 @@ public class LibraryClient {
      * @return a Book object with the requested key data
      */
     public Book getBookByISBN(List<KeyPossibilities> keys, String isbn) {
-        //TODO: add checkISBN function
+        // Ensure search term is valid
+        if (isbn == null || isbn.isBlank() || !checkISBN(isbn)) {
+            return null;
+        }
 
         // Retrieve page content based on formatted search
         String pageContent = getPageContent("search.json?q=" + isbn.trim());
@@ -71,13 +79,7 @@ public class LibraryClient {
      * @return a Book object
      */
     public Book getBookByISBN(String isbn) {
-        //TODO: add checkISBN function
-
-        // Retrieve page content based on formatted search
-        String pageContent = getPageContent("search.json?q=" + isbn.trim());
-        // Get the first (and only) element from the returned array
-        // Pass in all KeyPossibilities
-        return Objects.requireNonNull(formatPageContent(List.of(KeyPossibilities.values()), pageContent)).get(0);
+        return getBookByISBN(List.of(KeyPossibilities.values()), isbn);
     }
 
     /**
@@ -227,15 +229,48 @@ public class LibraryClient {
         return book;
     }
 
-//    private boolean checkISBN(String isbnString) {
-//        try {
-//            int total = 0;
-//            for (int i = (isbnString.length() -1), j = 0; i >= 0; i--, j++) {
-//                total += (i+1) * Integer.parseInt(isbnString.charAt(j));
-//            }
-//
-//        } catch (NumberFormatException ex) {
-//            return false;
-//        }
-//    }
+    /**
+     * Checks that isbn is valid
+     * @param isbn the isbn (10 or 13 digit, with or without dashes or spaces)
+     * @return true if valid, false if not
+     */
+    private boolean checkISBN(String isbn) {
+        if (isbn == null || isbn.length() == 0) {
+            return false;
+        }
+
+        // Remove any dashes or spaces from the string
+        isbn = isbn.replaceAll("[-\\s]", "");
+
+        int len = isbn.length();
+
+        // Check if the string is a valid ISBN-10
+        if (len == 10) {
+            int sum = 0;
+            for (int i = 0; i < len; i++) {
+                char c = isbn.charAt(i);
+                if (!Character.isDigit(c)) {
+                    return false;
+                }
+                sum += (10 - i) * Character.getNumericValue(c);
+            }
+            return sum % 11 == 0;
+        }
+
+        // Check if the string is a valid ISBN-13
+        if (len == 13) {
+            int sum = 0;
+            for (int i = 0; i < len; i++) {
+                char c = isbn.charAt(i);
+                if (!Character.isDigit(c)) {
+                    return false;
+                }
+                int digit = Character.getNumericValue(c);
+                sum += (i % 2 == 0) ? digit : 3 * digit;
+            }
+            return sum % 10 == 0;
+        }
+
+        return false;
+    }
 }
