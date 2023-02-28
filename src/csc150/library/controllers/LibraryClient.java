@@ -28,7 +28,7 @@ public class LibraryClient {
      * @param title the title you are searching for
      * @return a list of Book objects with the requested key data assigned to each
      */
-    public List<Book> getBookByTitleSearch(List<KeyPossibilities> keys, String title, int limit) {
+    public List<Book> getBookByTitleSearch(List<KeyPossibilities> keys, String title) {
         // Retrieve page content based on formatted search
         String pageContent = getPageContent("search.json?title=" + title.replace(" ", "+"));
         // Return array
