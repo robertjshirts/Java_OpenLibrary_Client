@@ -7,7 +7,7 @@
 package csc150.library.models;
 
 public enum KeyPossibilities {
-    FIRST_PUBLISH_YEAR, AUTHOR_NAME, NUMBER_OF_PAGES_MEDIAN, TITLE, PUBLISHER, SUBJECT;
+    PUBLISH_DATE, AUTHOR_NAME, NUMBER_OF_PAGES, TITLE, PUBLISHERS, SUMMARY;
 
     @Override
     public String toString() {

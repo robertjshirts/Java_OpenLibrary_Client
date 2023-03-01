@@ -9,29 +9,46 @@ package csc150.library.models;
 import java.util.List;
 
 public class Book {
+    private String primaryIsbn;
+    private String primaryKey;
     private String title;
-    private int firstPublishYear;
+    private String publishDate;
     private int medianPages;
     private List<String> authorNames;
-    private List<String> subjects;
     private List<String> publisher;
+    private String summary;
+    private String imageId;
 
     public Book() {
         setTitle(null);
-        setFirstPublishYear(-1);
-        setMedianPages(-1);
+        setPublishDate(null);
+        setNumberOfPages(-1);
         setAuthorNames(null);
-        setSubjects(null);
-        setPublisher(null);
+        setPublishers(null);
+        setPrimaryIsbn(null);
+        setPrimaryKey(null);
+        setImageId(null);
     }
 
-    public Book(String title, int firstPublishYear, int medianPages, List<String> authorNames, List<String> subjects, List<String> publisher) {
+    public Book(String title, String publishDate, int medianPages, List<String> authorNames,
+                List<String> subjects, List<String> publisher, String isbn, String primaryKey, String imageId) {
+        setPrimaryIsbn(isbn);
         setTitle(title);
-        setFirstPublishYear(firstPublishYear);
-        setMedianPages(medianPages);
+        setPublishDate(publishDate);
+        setNumberOfPages(medianPages);
         setAuthorNames(authorNames);
-        setSubjects(subjects);
-        setPublisher(publisher);
+        setPublishers(publisher);
+        setPrimaryKey(primaryKey);
+        setImageId(imageId);
+    }
+
+    public String getPrimaryIsbn() {
+        if (primaryIsbn == null) return "";
+        return primaryIsbn + "";
+    }
+
+    public void setPrimaryIsbn(String primaryIsbn) {
+        this.primaryIsbn = primaryIsbn;
     }
 
     public String getTitle() {
@@ -42,13 +59,13 @@ public class Book {
         this.title = title;
     }
 
-    public String getFirstPublishYear() {
-        if (firstPublishYear == -1) return "";
-        return firstPublishYear + "";
+    public String getPublishDate() {
+        if (publishDate == null) return "";
+        return publishDate + "";
     }
 
-    public void setFirstPublishYear(int firstPublishYear) {
-        this.firstPublishYear = firstPublishYear;
+    public void setPublishDate(String publishDate) {
+        this.publishDate = publishDate;
     }
 
     public String getMedianPages() {
@@ -56,7 +73,7 @@ public class Book {
         return medianPages + "";
     }
 
-    public void setMedianPages(int medianPages) {
+    public void setNumberOfPages(int medianPages) {
         this.medianPages = medianPages;
     }
 
@@ -69,32 +86,47 @@ public class Book {
         this.authorNames = authorNames;
     }
 
-    public List<String> getSubjects() {
-        if (subjects == null || subjects.isEmpty()) return null;
-        return subjects;
-    }
-
-    public void setSubjects(List<String> subjects) {
-        this.subjects = subjects;
-    }
-
     public List<String> getPublisher() {
         if (publisher == null || publisher.isEmpty()) return null;
         return publisher;
     }
 
-    public void setPublisher(List<String> publisher) {
+    public void setPublishers(List<String> publisher) {
         this.publisher = publisher;
+    }
+
+    public String getPrimaryKey() {
+        return primaryKey;
+    }
+
+    public void setPrimaryKey(String primaryKey) {
+        this.primaryKey = primaryKey;
+    }
+
+    public String getImageId() {
+        return imageId;
+    }
+
+    public void setImageId(String imageId) {
+        this.imageId = imageId;
+    }
+
+    public String getSummary() {
+        return summary;
+    }
+
+    public void setSummary(String summary) {
+        this.summary = summary;
     }
 
     @Override
     public String toString() {
         return "Book{" +
                 "title='" + title + '\'' +
-                ", firstPublishYear=" + firstPublishYear +
+                ", ISBNEnglish=" + primaryIsbn +
+                ", firstPublishYear=" + publishDate +
                 ", medianPages=" + medianPages +
                 ", authorName='" + authorNames + '\'' +
-                ", subjects=" + subjects +
                 ", publisher=" + publisher +
                 '}';
     }
