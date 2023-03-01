@@ -16,6 +16,9 @@ public class Book {
     private List<String> subjects;
     private List<String> publisher;
 
+    /**
+     * Default constructor for Book class set all values to null or -1
+     */
     public Book() {
         setTitle(null);
         setFirstPublishYear(-1);
@@ -25,6 +28,15 @@ public class Book {
         setPublisher(null);
     }
 
+    /**
+     * Overloaded constructor for Book class requires the input of all parameters
+     * @param title the title of the book
+     * @param firstPublishYear the first year the book was published
+     * @param medianPages the number of median pages
+     * @param authorNames the name of the authors that wrote the book
+     * @param subjects the subjects of the book
+     * @param publisher who published the book
+     */
     public Book(String title, int firstPublishYear, int medianPages, List<String> authorNames, List<String> subjects, List<String> publisher) {
         setTitle(title);
         setFirstPublishYear(firstPublishYear);
