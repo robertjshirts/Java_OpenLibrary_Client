@@ -185,10 +185,10 @@ public class LibraryClient {
      * @param keys the keys that you want to get data from (ie publisher, page count, etc)
      * @return a list of books from the search with the keys data assigned
      */
-    public List<Book> advancedSearch(List<QueryPossibilities> types, List<String> queries, List<KeyPossibilities> keys) {
+    public List<Book> advancedSearch(List<QueryPossibilities> types, List<String> queries, List<KeyPossibilities> keys, int page) {
         if (types == null || queries == null || keys == null ||
                 types.size() != queries.size() || keys.isEmpty()) return null;
-        String searchResult = getPageContent(queryFormatter(types, queries));
+        String searchResult = getPageContent(queryFormatter(types, queries, page));
         return formatPageContent(keys, searchResult);
     }
 
@@ -196,24 +196,35 @@ public class LibraryClient {
      * Searches OpenLibrary for books based on an author and returns certain data
      * @param keys the data you want from each book
      * @param author the author you are searching for
+     * @param page the page of data you want to retrieve
      * @return a lst of Book objects with the requested data
      */
-    public List<Book> authorSearch(List<KeyPossibilities> keys, String author) {
+    public List<Book> authorSearch(List<KeyPossibilities> keys, String author, int page) {
         // Ensure search term is valid
         if (author == null || author.isBlank()) {
             return null;
         }
         // Returns book list using advancedSearch method
-        return advancedSearch(List.of(QueryPossibilities.AUTHOR), List.of(author), keys);
+        return advancedSearch(List.of(QueryPossibilities.AUTHOR), List.of(author), keys, page);
     }
 
     /**
      * Searches OpenLibrary for books based on an author and returns all relevant data
      * @param author the author you are searching for
+     * @param page the page of data you want to retrieve
      * @return a lst of Book objects
      */
+    public List<Book> authorSearch(String author, int page) {
+        return authorSearch(List.of(KeyPossibilities.values()), author, page);
+    }
+
+    /**
+     * Searches OpenLibrary for books based on an author and returns all relevant data
+     * @param author the author you are searching for
+     * @return a list of Book objects
+     */
     public List<Book> authorSearch(String author) {
-        return authorSearch(List.of(KeyPossibilities.values()), author);
+        return authorSearch(List.of(KeyPossibilities.values()), author, 1);
     }
 
     /**
@@ -222,24 +233,35 @@ public class LibraryClient {
      * @param title the title you are searching for
      * @return a list of Book objects with the requested data
      */
-    public List<Book> titleSearch(List<KeyPossibilities> keys, String title) {
+    public List<Book> titleSearch(List<KeyPossibilities> keys, String title, int page) {
         // Ensure search term is valid
         if (title == null || title.isBlank()) {
             return null;
         }
 
         // Returns book list using advancedSearch method
-        return advancedSearch(List.of(QueryPossibilities.TITLE), List.of(title), keys);
+        return advancedSearch(List.of(QueryPossibilities.TITLE), List.of(title), keys, page);
     }
 
     /**
      * Searches OpenLibrary for a book based on a title and all relevant data
      * @param title the title you are searching for
+     * @param page the page of data you want to retrieve
+     * @return a list of Book objects
+     */
+    public List<Book> titleSearch(String title, int page) {
+        // Calls the original function but with all KeyPossibilities
+        return titleSearch(List.of(KeyPossibilities.values()), title, page);
+    }
+
+    /**
+     * Searches OpenLibrary for a book based on a title and all relevant data, but only gets page 1
+     * @param title the title you are searching for
      * @return a list of Book objects
      */
     public List<Book> titleSearch(String title) {
         // Calls the original function but with all KeyPossibilities
-        return titleSearch(List.of(KeyPossibilities.values()), title);
+        return titleSearch(List.of(KeyPossibilities.values()), title, 1);
     }
 
     /**
@@ -256,7 +278,7 @@ public class LibraryClient {
 
         // Returns first book from book list using advancedSearch method (because we expect one result from isbn)
         return Objects.requireNonNull(
-                advancedSearch(List.of(QueryPossibilities.ISBN), List.of(isbn), keys)).get(0);
+                advancedSearch(List.of(QueryPossibilities.ISBN), List.of(isbn), keys, 1)).get(0);
     }
 
     /**
@@ -274,7 +296,7 @@ public class LibraryClient {
      * @param queries query values
      * @return the formatted subdomain as a string
      */
-    private String queryFormatter(List<QueryPossibilities> types, List<String> queries) {
+    private String queryFormatter(List<QueryPossibilities> types, List<String> queries, int page) {
         // Initialize StringBuilder
         StringBuilder formattedQuery = new StringBuilder();
         formattedQuery.append("search.json?");
@@ -295,8 +317,11 @@ public class LibraryClient {
             formattedQuery.append("&");
         }
 
+        //Append page number
+        formattedQuery.append("page=").append(page);
+
         // Append sort by # of editions (shows more relevant results first)
-        formattedQuery.append("sort=editions");
+        formattedQuery.append("&sort=editions");
 
         // Return formatted query, and replace any " " with +
         return formattedQuery.toString().replace(" ", "+");

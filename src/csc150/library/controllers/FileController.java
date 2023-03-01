@@ -12,7 +12,6 @@ import java.util.Arrays;
 import java.util.List;
 
 public class FileController {
-
     //names of the files and root folder
     public static final String ROOT_FOLDER = "BookShelf";
     public static final String FAVORITES = "Favorites";
@@ -20,140 +19,72 @@ public class FileController {
     public static final String PLAN_TO_READ = "PlaneToRead";
     public static final String READING = "Reading";
 
-
     /**
-     * write to a file
-     * @param fileName the name of the file you would like to write to d
-     * @param contents what will be written to the file
-     * @param append are you going to append to an existing file
+     * Writes to fileName with contents, if append is false it writes over the file
+     * @param fileName the name of the file you want to write to
+     * @param contents the contents you want to write to the file
+     * @param append if you want to append to or rewrite the file
      */
     public void writeFile(String fileName, String contents, boolean append) {
-        //checks if root folder exits
         createRootFolder();
+
         BufferedWriter write = null;
         try {
-            //writes to the file
             write = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(getFileName(fileName), append)));
             write.write(contents);
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            throw new RuntimeException(e);
+        } catch (Exception ignored) {
+
         } finally {
-            // closes the file
-            try {
-                if(write == null){
-                    return;
-                }
-                write.close();
-            } catch (IOException e) {
-                throw new RuntimeException();
-            }
+            closeStream(write);
         }
     }
 
     /**
-     * Delete something from a file
-     * @param fileName the name of the file you wish to delete something from
-     * @param contentToDelete the content that you want to delete from the file
+     * returns the content that is stored in fileName
+     * @param fileName the name of the file you want to read from
+     * @return the content as a string
      */
-    public void deleteFromFile(String fileName, String contentToDelete){
+    public String readFile(String fileName) {
         BufferedReader read = null;
-        String content = "";
-        String currentLine = "";
-        int howManylines = getHowManyLines(fileName);
-        int count = 0;
-        int line = 0;
-        boolean lineFound = false;
-        try{
-            //removes the book
-            //TODO this need to be fixed
-            read = new BufferedReader(new InputStreamReader(new FileInputStream(getFileName(fileName))));
-            while ((currentLine = read.readLine()) != null){
-                if(currentLine.contains(contentToDelete)){
-                    lineFound = true;
-                    count++;
-                }
-                if (lineFound && line < 6){
-                    line++;
-                    count++;
-                }
-                else {
-                    content += content + "\n" + currentLine;
-                    count++;
-                }
-                if (count == howManylines){
-                    break;
-                }
-            }
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        } finally {
-            try {
-                //closes the file
-                read.close();
-            }catch (IOException e){
-                throw new RuntimeException(e.getMessage());
-            }
-        }
-        //rewrite the file without the removed book
-        writeFile(fileName, content, false);
-    }
-
-    /**
-     * Reads the content of a file
-     * @param fileName the name of the file you want to read
-     * @return the contents of a file
-     */
-    public String readFile(String fileName){
-        BufferedReader read = null;
-        String content = "";
-        try{
-            //reads the file per line and appends to a bufferedReader
+        StringBuilder content = new StringBuilder();
+        try {
             read = new BufferedReader(new InputStreamReader(new FileInputStream(getFileName(fileName))));
             while (read.ready()) {
-                content += read.readLine() + "\r\n";
+                content.append(read.readLine()).append("\r\n");
             }
-        } catch (IOException e) {
-            throw new RuntimeException(e);
+        } catch (Exception ignored) {
         } finally {
-            try {
-                //closes the file
-                read.close();
-            }catch (IOException e){
-                throw new RuntimeException(e.getMessage());
-            }
+            closeStream(read);
         }
-        // returns content of file
-        return content;
+        return content.toString();
     }
 
     /**
-     * Get the amount of lines in a file
-     * @param fileName the name of the file you are counting the lines for
-     * @return the amount of lines in a file
+     * Deletes title line and 4 lines of data after it from fileName
+     * @param fileName the file you are changing
+     * @param title the title of the book data you want to delete
      */
-    public int getHowManyLines(String fileName){
-        BufferedReader read = null;
-        int lineCount = 0;
-        try{
-            //reads the file and count the amount of lines
-            read = new BufferedReader(new InputStreamReader(new FileInputStream(getFileName(fileName))));
-            while (read.readLine() != null) {
-                lineCount++;
-            }
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        } finally {
+    public void deleteFromFile(String fileName, String title) {
+        title = "Title:" + title;
+        String content = readFile(fileName);
+        int startIndex = content.indexOf(title);
+        if (startIndex == -1) return;
+        int endIndex = startIndex;
+        int newLineCount = 0;
+        while (true) {
             try {
-                //closes the file
-                read.close();
-            }catch (IOException e){
-                throw new RuntimeException(e.getMessage());
+                if (content.charAt(endIndex++) == '\n') {
+                    System.out.println("found newline");
+                    newLineCount++;
+                    if (newLineCount == 5) {
+                        writeFile(fileName, content.replace(content.substring(startIndex, endIndex+2), ""), false);
+                        return;
+                    }
+                }
+            } catch (IndexOutOfBoundsException e) {
+                return;
             }
         }
-        // returns content of file
-        return lineCount;
     }
 
     /**
@@ -196,5 +127,18 @@ public class FileController {
            }
         }
         return false;
+    }
+
+    /**
+     * Closes the read or write stream with error handling and such
+     * @param stream the stream to close
+     */
+    private void closeStream(Closeable stream) {
+        if (stream == null) return;
+        try {
+            stream.close();
+        } catch (IOException ex) {
+            ex.printStackTrace();
+        }
     }
 }
