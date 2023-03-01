@@ -7,10 +7,5 @@
 package csc150.library.models;
 
 public enum KeyPossibilities {
-    PUBLISH_DATE, AUTHOR_NAME, NUMBER_OF_PAGES, TITLE, PUBLISHERS, SUMMARY;
-
-    @Override
-    public String toString() {
-        return super.toString().toLowerCase();
-    }
+    PUBLISH_DATE, AUTHOR_NAME, NUMBER_OF_PAGES, TITLE, PUBLISHERS, SUMMARY
 }
