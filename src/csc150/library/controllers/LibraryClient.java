@@ -47,9 +47,14 @@ public class LibraryClient {
             JsonNode docs = searchResultJson.get("docs");
             for (JsonNode doc : docs) {
                 // Have to fetch authorName here
-                List<String> authors = new ArrayList<>();
-                for (JsonNode author : doc.get("author_name")) {
-                    authors.add(author.asText());
+                List<String> authors;
+                try {
+                    authors = new ArrayList<>();
+                    for (JsonNode author : doc.get("author_name")) {
+                        authors.add(author.asText());
+                    }
+                } catch (NullPointerException e) {
+                    authors = null;
                 }
 
                 // Fetch primary edition key, ensure it isn't null
@@ -63,7 +68,11 @@ public class LibraryClient {
                 // Get Book info from primary edition json and add to books list
                 books.add(getBookInfoFromJson(keys, primaryBookJson, primaryKey, authors));
             }
-        } catch (Exception ignored) { }
+        } catch (Exception e) {
+
+            System.out.println(e.getMessage());
+            e.printStackTrace();
+        }
         // Return books list
         return books;
     }
