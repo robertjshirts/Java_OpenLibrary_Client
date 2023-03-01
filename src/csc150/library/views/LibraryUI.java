@@ -140,6 +140,14 @@ public class LibraryUI {
                     personalLibrary.dispose();
                 });
 
+                JButton delete = new JButton();
+                delete.addActionListener(e -> {
+                    String whatLine = JOptionPane.showInputDialog("What is the title of the book you want to delete");
+                    files.deleteFromFile(FileController.FAVORITES, whatLine);
+                    mainPanel.revalidate();
+                });
+                mainPanel.add(delete);
+
 
                 //sets the content to the panels
                 contentPanel.add(contentLabel1);

@@ -60,16 +60,26 @@ public class FileController {
     public void deleteFromFile(String fileName, String contentToDelete){
         BufferedReader read = null;
         String content = "";
+        String currentLine = "";
+        int line = 0;
+        boolean lineFound = false;
         try{
-            //reads the file per line and appends to a bufferedReader
+            //removes the book
+            //TODO fix this is makes an infinite loop
             read = new BufferedReader(new InputStreamReader(new FileInputStream(getFileName(fileName))));
-            String currentLine = "";
-            //removes the line
-            while ((currentLine = read.readLine()) != null) {
-                if(currentLine.equals(contentToDelete)){
-                    continue;
+            while ((currentLine = read.readLine()) != null){
+                if(currentLine.contains(contentToDelete)){
+                    lineFound = true;
                 }
-                content += read.readLine() + "\r\n";
+                if (lineFound && line < 6){
+                    line++;
+                }
+                else {
+                    content += content + "\n" + currentLine;
+                }
+                if(line == 6){
+                    break;
+                }
             }
         } catch (IOException e) {
             throw new RuntimeException(e);
@@ -81,7 +91,7 @@ public class FileController {
                 throw new RuntimeException(e.getMessage());
             }
         }
-        //rewrite the file without the removed line
+        //rewrite the file without the removed book
         writeFile(fileName, content, false);
     }
 
