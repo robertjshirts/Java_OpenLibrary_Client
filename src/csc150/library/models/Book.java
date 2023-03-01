@@ -1,5 +1,5 @@
 /**
- * @author rshirts
+ * @author rshirts dthompson
  * @createdOn 2/27/2023 at 1:09 PM
  * @projectName LibraryV4
  * @packageName csc150.library.models;
@@ -54,16 +54,18 @@ public class Book {
         this.title = title;
     }
 
-    public int getFirstPublishYear() {
-        return firstPublishYear;
+    public String getFirstPublishYear() {
+        if (firstPublishYear == -1) return "";
+        return firstPublishYear + "";
     }
 
     public void setFirstPublishYear(int firstPublishYear) {
         this.firstPublishYear = firstPublishYear;
     }
 
-    public int getMedianPages() {
-        return medianPages;
+    public String getMedianPages() {
+        if (medianPages == -1) return "";
+        return medianPages + "";
     }
 
     public void setMedianPages(int medianPages) {
@@ -71,6 +73,7 @@ public class Book {
     }
 
     public List<String> getAuthorNames() {
+        if (authorNames == null || authorNames.isEmpty()) return null;
         return authorNames;
     }
 
@@ -79,6 +82,7 @@ public class Book {
     }
 
     public List<String> getSubjects() {
+        if (subjects == null || subjects.isEmpty()) return null;
         return subjects;
     }
 
@@ -87,6 +91,7 @@ public class Book {
     }
 
     public List<String> getPublisher() {
+        if (publisher == null || publisher.isEmpty()) return null;
         return publisher;
     }
 
