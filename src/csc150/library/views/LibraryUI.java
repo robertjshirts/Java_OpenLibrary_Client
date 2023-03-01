@@ -77,7 +77,7 @@ public class LibraryUI {
     }
 
     /**
-     * Display your personal library
+     * Display the personal library
      */
     private void displayPersonalLibrary(){
 
@@ -130,6 +130,8 @@ public class LibraryUI {
                         contentTextArea.setText(files.readFile(fileName));
                     });
 
+
+                    //TODO either remove or add functionality
                     JButton move = new JButton("Move");
                     move.addActionListener(e -> {
 

@@ -130,8 +130,13 @@ public class FileController {
      * Will make a root folder if does not exist
      */
     private void createRootFolder(){
+
+        //makes a file
         File rootFolder = new File(ROOT_FOLDER);
+
+        //checks in the folder exists
         if(!rootFolder.exists()){
+
             //makes directory
             try {
                 rootFolder.mkdir();
@@ -147,14 +152,26 @@ public class FileController {
      * @return a true or false value for if the file exits
      */
     public boolean doesFileExist(String fileName){
+        //checks if root folder exists
         createRootFolder();
+
+        // take all files in the root folder and puts them in an array
         File rootFolder = new File(ROOT_FOLDER);
-        List<String> files = Arrays.asList(rootFolder.list());
-        for (int i = 0; i < files.size(); i++) {
-           if (files.get(i).equals(fileName + ".txt")){
-               return true;
-           }
+        String[] files = rootFolder.list();
+
+        //check if array is null
+        assert files != null;
+
+        //checks if file is in the list
+        for (String file : files) {
+            if (file.equals(fileName + ".txt")) {
+
+                //file was found
+                return true;
+            }
         }
+
+        //file wasn't found
         return false;
     }
 
