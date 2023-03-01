@@ -12,7 +12,7 @@ import java.util.Arrays;
 import java.util.List;
 
 public class FileController {
-    //TODO make sure this works
+
     //names of the files and root folder
     public static final String ROOT_FOLDER = "BookShelf";
     public static final String FAVORITES = "Favorites";
@@ -60,16 +60,26 @@ public class FileController {
     public void deleteFromFile(String fileName, String contentToDelete){
         BufferedReader read = null;
         String content = "";
+        String currentLine = "";
+        int line = 0;
+        boolean lineFound = false;
         try{
-            //reads the file per line and appends to a bufferedReader
+            //removes the book
+            //TODO fix this is makes an infinite loop
             read = new BufferedReader(new InputStreamReader(new FileInputStream(getFileName(fileName))));
-            String currentLine = "";
-            //removes the line
-            while ((currentLine = read.readLine()) != null) {
-                if(currentLine.equals(contentToDelete)){
-                    continue;
+            while ((currentLine = read.readLine()) != null){
+                if(currentLine.contains(contentToDelete)){
+                    lineFound = true;
                 }
-                content += read.readLine() + "\r\n";
+                if (lineFound && line < 6){
+                    line++;
+                }
+                else {
+                    content += content + "\n" + currentLine;
+                }
+                if(line == 6){
+                    break;
+                }
             }
         } catch (IOException e) {
             throw new RuntimeException(e);
@@ -81,7 +91,7 @@ public class FileController {
                 throw new RuntimeException(e.getMessage());
             }
         }
-        //rewrite the file without the removed line
+        //rewrite the file without the removed book
         writeFile(fileName, content, false);
     }
 
@@ -124,7 +134,7 @@ public class FileController {
     }
 
     /**
-     * will make a root folder if does not exist
+     * Will make a root folder if does not exist
      */
     private void createRootFolder(){
         File rootFolder = new File(ROOT_FOLDER);
@@ -138,12 +148,17 @@ public class FileController {
         }
     }
 
+    /**
+     * Checks if a file exits or no in the folder
+     * @param fileName the name of the file you want to see exits
+     * @return a true or false value for if the file exits
+     */
     public boolean doesFileExist(String fileName){
         createRootFolder();
         File rootFolder = new File(ROOT_FOLDER);
         List<String> files = Arrays.asList(rootFolder.list());
         for (int i = 0; i < files.size(); i++) {
-           if (files.get(i).equals(getFileName(fileName))){
+           if (files.get(i).equals(fileName + ".txt")){
                return true;
            }
         }

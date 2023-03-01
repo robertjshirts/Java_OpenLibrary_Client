@@ -96,30 +96,76 @@ public class LibraryUI {
 
                 //makes panels and set the layouts
                 JPanel mainPanel = new JPanel();
-                mainPanel.setLayout(new FlowLayout());
+                mainPanel.setLayout(new FlowLayout(FlowLayout.LEFT));
                 JPanel contentPanel = new JPanel();
                 contentPanel.setLayout(new BoxLayout(contentPanel, BoxLayout.Y_AXIS));
 
-                //TODO add content from file manager here
                 //gets the content for the window
                 JLabel contentLabel1 = new JLabel(FileController.FAVORITES);
-                contentLabel1.setBackground(Color.gray);
+                JTextArea contentTextArea1 = new JTextArea();
+                if (files.doesFileExist(FileController.FAVORITES)){
+                    contentTextArea1.setText(files.readFile(FileController.FAVORITES));
+                }
+                else{
+                    contentTextArea1.setText("");
+                }
                 JLabel contentLabel2 = new JLabel(FileController.READING);
+                JTextArea contentTextArea2 = new JTextArea();
+                if (files.doesFileExist(FileController.READING)){
+                    contentTextArea2.setText(files.readFile(FileController.READING));
+                }
+                else{
+                    contentTextArea2.setText("");
+                }
                 JLabel contentLabel3 = new JLabel(FileController.HAS_READ);
+                JTextArea contentTextArea3 = new JTextArea();
+                if (files.doesFileExist(FileController.HAS_READ)){
+                    contentTextArea3.setText(files.readFile(FileController.HAS_READ));
+                }
+                else{
+                    contentTextArea3.setText("");
+                }
                 JLabel contentLabel4 = new JLabel(FileController.PLAN_TO_READ);
+                JTextArea contentTextArea4 = new JTextArea();
+                if (files.doesFileExist(FileController.PLAN_TO_READ)){
+                    contentTextArea4.setText(files.readFile(FileController.PLAN_TO_READ));
+                }
+                else{
+                    contentTextArea4.setText("");
+                }
+
+                //creates an exit button
+                JButton exit = new JButton("Exit");
+                exit.addActionListener(e -> {
+                    personalLibrary.dispose();
+                });
+
+                JButton delete = new JButton();
+                delete.addActionListener(e -> {
+                    String whatLine = JOptionPane.showInputDialog("What is the title of the book you want to delete");
+                    files.deleteFromFile(FileController.FAVORITES, whatLine);
+                    mainPanel.revalidate();
+                });
+                mainPanel.add(delete);
+
 
                 //sets the content to the panels
                 contentPanel.add(contentLabel1);
+                contentPanel.add(contentTextArea1);
                 contentPanel.add(contentLabel2);
+                contentPanel.add(contentTextArea2);
                 contentPanel.add(contentLabel3);
+                contentPanel.add(contentTextArea3);
                 contentPanel.add(contentLabel4);
+                contentPanel.add(contentTextArea4);
+                contentPanel.add(exit);
                 mainPanel.add(contentPanel);
 
                 //set the panels to the window
                 personalLibrary.getContentPane().add(mainPanel);
 
                 //sets the size and makes the window visible
-                personalLibrary.setSize(700, 700);
+                personalLibrary.setExtendedState(JFrame.MAXIMIZED_BOTH);
                 personalLibrary.setVisible(true);
             }
         });
@@ -157,6 +203,8 @@ public class LibraryUI {
                     JTextArea textArea = new JTextArea();
                     Book book = books.get(i);
                     textArea.setText("Title:" + book.getTitle() + "\n" + "Author: " + book.getAuthorNames() + "\n" + "Publisher: " + book.getPublisher() + "\n" + "First publish year: " + book.getFirstPublishYear() + "\n" + "Subjects: " + book.getSubjects() + "\n" + "Median pages: " + book.getMedianPages() + "\n\n");
+
+                    //makes the buttons that allows you to save the book
                     JButton favorite = new JButton("Add to favorites");
                     favorite.addActionListener(e -> {
                         boolean append = files.doesFileExist(FileController.FAVORITES);
@@ -177,6 +225,8 @@ public class LibraryUI {
                         boolean append = files.doesFileExist(FileController.PLAN_TO_READ);
                         files.writeFile(FileController.PLAN_TO_READ, textArea.getText(), append);
                     });
+
+                    //set all elements to the panel
                     buttonPanel.add(favorite);
                     buttonPanel.add(reading);
                     buttonPanel.add(hasRead);
@@ -184,6 +234,18 @@ public class LibraryUI {
                     mainPanel.add(textArea);
                     mainPanel.add(buttonPanel);
                 }
+
+                //creates an exit button
+                JButton exit = new JButton("Exit");
+                exit.addActionListener(e -> {
+                    window.dispose();
+                });
+
+                //makes a new panel just to put the exit button on the left :(
+                JPanel buttonPanel = new JPanel();
+                buttonPanel.setLayout(new FlowLayout(FlowLayout.LEFT));
+                buttonPanel.add(exit);
+                mainPanel.add(buttonPanel);
 
                 //set panel to the window
                 window.getContentPane().add(scrollPane);
