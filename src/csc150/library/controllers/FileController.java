@@ -15,8 +15,8 @@ public class FileController {
     //names of the files and root folder
     public static final String ROOT_FOLDER = "BookShelf";
     public static final String FAVORITES = "Favorites";
-    public static final String HAS_READ = "HasRed";
-    public static final String PLAN_TO_READ = "PlaneToRead";
+    public static final String HAS_READ = "Has+Read";
+    public static final String PLAN_TO_READ = "Plan+To+Read";
     public static final String READING = "Reading";
 
     /**
