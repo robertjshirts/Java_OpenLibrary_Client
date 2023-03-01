@@ -61,21 +61,29 @@ public class FileController {
         BufferedReader read = null;
         String content = "";
         String currentLine = "";
+        int howManylines = getHowManyLines(fileName);
+        int count = 0;
         int line = 0;
         boolean lineFound = false;
         try{
             //removes the book
-            //TODO it doesn't write the full file
+            //TODO this need to be fixed
             read = new BufferedReader(new InputStreamReader(new FileInputStream(getFileName(fileName))));
             while ((currentLine = read.readLine()) != null){
                 if(currentLine.contains(contentToDelete)){
                     lineFound = true;
+                    count++;
                 }
                 if (lineFound && line < 6){
                     line++;
+                    count++;
                 }
                 else {
                     content += content + "\n" + currentLine;
+                    count++;
+                }
+                if (count == howManylines){
+                    break;
                 }
             }
         } catch (IOException e) {
@@ -118,6 +126,34 @@ public class FileController {
         }
         // returns content of file
         return content;
+    }
+
+    /**
+     * Get the amount of lines in a file
+     * @param fileName the name of the file you are counting the lines for
+     * @return the amount of lines in a file
+     */
+    public int getHowManyLines(String fileName){
+        BufferedReader read = null;
+        int lineCount = 0;
+        try{
+            //reads the file and count the amount of lines
+            read = new BufferedReader(new InputStreamReader(new FileInputStream(getFileName(fileName))));
+            while (read.readLine() != null) {
+                lineCount++;
+            }
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        } finally {
+            try {
+                //closes the file
+                read.close();
+            }catch (IOException e){
+                throw new RuntimeException(e.getMessage());
+            }
+        }
+        // returns content of file
+        return lineCount;
     }
 
     /**

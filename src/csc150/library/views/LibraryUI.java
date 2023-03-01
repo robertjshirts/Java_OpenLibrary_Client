@@ -145,7 +145,7 @@ public class LibraryUI {
                 delete.addActionListener(e -> {
                     String whatLine = JOptionPane.showInputDialog("What is the title of the book you want to delete");
                     files.deleteFromFile(FileController.FAVORITES, whatLine);
-                    mainPanel.revalidate();
+                    contentTextArea1.revalidate();
                 });
                 mainPanel.add(delete);
 
@@ -177,6 +177,7 @@ public class LibraryUI {
      * @param search the term the user is using to search through the openLibrary api
      */
     private void displaySearch(String search){
+        search = search.trim();
 
         // get a list of books from the library client
         LibraryClient client = new LibraryClient();
@@ -196,14 +197,13 @@ public class LibraryUI {
                 mainPanel.setLayout(new BoxLayout(mainPanel, BoxLayout.Y_AXIS));
                 JScrollPane scrollPane = new JScrollPane(mainPanel);
 
-
                 //gets the search for the book and displays them
                 for (int i = 0; i < books.size(); i++) {
                     JPanel buttonPanel = new JPanel();
                     buttonPanel.setLayout(new FlowLayout(FlowLayout.LEFT));
                     JTextArea textArea = new JTextArea();
                     Book book = books.get(i);
-                    textArea.setText("Title:" + book.getTitle() + "\n" + "Author: " + book.getAuthorNames() + "\n" + "Publisher: " + book.getPublisher() + "\n" + "First publish year: " + book.getPublishDate() + "\n" + "Median pages: " + book.getNumberOfPages() + "\n\n");
+                    textArea.setText("Title:" + book.getTitle() + "\n" + "Author: " + book.getAuthorNames() + "\n" + "Publisher: " + book.getPublisher() + "\n" + "Publish date: " + book.getPublishDate() + "\n" + "Number of pages: " + book.getNumberOfPages() + "\n\n");
 
                     //makes the buttons that allows you to save the book
                     JButton favorite = new JButton("Add to favorites");
