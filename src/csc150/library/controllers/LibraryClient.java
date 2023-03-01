@@ -198,7 +198,10 @@ public class LibraryClient {
      * @return a list of books that contain the search query in title or author
      */
     public List<Book> search(String searchQuery){
-        List<Book> returnList = new ArrayList<Book>();
+        //creates the array list that will be used for the return
+        List<Book> returnList = new ArrayList<>();
+
+        // searches for titles
         try {
             List<Book> books = titleSearch(searchQuery);
             for (int i = 0; i < books.size(); i++) {
@@ -207,6 +210,8 @@ public class LibraryClient {
         }catch (NullPointerException e){
             System.out.println("No titles found");
         }
+
+        //searches for authors
         try {
             List<Book> books = authorSearch(searchQuery);
             for (int i = 0; i < books.size(); i++) {
@@ -215,7 +220,13 @@ public class LibraryClient {
         }catch (NullPointerException e){
             System.out.println("No author found");
         }
-        return returnList;
+
+        // returns if anything was found
+        try {
+            return returnList;
+        }catch (NullPointerException e){
+            return null;
+        }
     }
 
     /**
