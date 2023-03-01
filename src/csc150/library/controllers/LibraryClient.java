@@ -193,6 +193,32 @@ public class LibraryClient {
     }
 
     /**
+     * Makes a search that looks for both titles and authors
+     * @param searchQuery what the using is searching by
+     * @return a list of books that contain the search query in title or author
+     */
+    public List<Book> search(String searchQuery){
+        List<Book> returnList = new ArrayList<Book>();
+        try {
+            List<Book> books = titleSearch(searchQuery);
+            for (int i = 0; i < books.size(); i++) {
+                returnList.add(books.get(i));
+            }
+        }catch (NullPointerException e){
+            System.out.println("No titles found");
+        }
+        try {
+            List<Book> books = authorSearch(searchQuery);
+            for (int i = 0; i < books.size(); i++) {
+                returnList.add(books.get(i));
+            }
+        }catch (NullPointerException e){
+            System.out.println("No author found");
+        }
+        return returnList;
+    }
+
+    /**
      * Searches OpenLibrary for books based on an author and returns certain data
      * @param keys the data you want from each book
      * @param author the author you are searching for

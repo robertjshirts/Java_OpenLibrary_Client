@@ -162,7 +162,7 @@ public class LibraryUI {
 
         // get a list of books from the library client
         LibraryClient client = new LibraryClient();
-        List<Book> books = client.titleSearch(search);
+        List<Book> books = client.search(search);
 
         // makes a new runnable for the window
         EventQueue.invokeLater(new Runnable() {
