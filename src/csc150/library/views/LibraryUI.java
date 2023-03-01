@@ -99,6 +99,7 @@ public class LibraryUI {
                 mainPanel.setLayout(new FlowLayout(FlowLayout.LEFT));
                 JPanel contentPanel = new JPanel();
                 contentPanel.setLayout(new BoxLayout(contentPanel, BoxLayout.Y_AXIS));
+                JScrollPane scrollPane = new JScrollPane(mainPanel);
 
                 //gets the content for the window
                 JLabel contentLabel1 = new JLabel(FileController.FAVORITES);
@@ -162,7 +163,7 @@ public class LibraryUI {
                 mainPanel.add(contentPanel);
 
                 //set the panels to the window
-                personalLibrary.getContentPane().add(mainPanel);
+                personalLibrary.getContentPane().add(scrollPane);
 
                 //sets the size and makes the window visible
                 personalLibrary.setExtendedState(JFrame.MAXIMIZED_BOTH);
@@ -179,7 +180,7 @@ public class LibraryUI {
 
         // get a list of books from the library client
         LibraryClient client = new LibraryClient();
-        List<Book> books = client.getBookByTitleSearch(search);
+        List<Book> books = client.titleSearch(search);
 
         // makes a new runnable for the window
         EventQueue.invokeLater(new Runnable() {
@@ -202,7 +203,7 @@ public class LibraryUI {
                     buttonPanel.setLayout(new FlowLayout(FlowLayout.LEFT));
                     JTextArea textArea = new JTextArea();
                     Book book = books.get(i);
-                    textArea.setText("Title:" + book.getTitle() + "\n" + "Author: " + book.getAuthorNames() + "\n" + "Publisher: " + book.getPublisher() + "\n" + "First publish year: " + book.getFirstPublishYear() + "\n" + "Subjects: " + book.getSubjects() + "\n" + "Median pages: " + book.getMedianPages() + "\n\n");
+                    textArea.setText("Title:" + book.getTitle() + "\n" + "Author: " + book.getAuthorNames() + "\n" + "Publisher: " + book.getPublisher() + "\n" + "First publish year: " + book.getPublishDate() + "\n" + "Median pages: " + book.getNumberOfPages() + "\n\n");
 
                     //makes the buttons that allows you to save the book
                     JButton favorite = new JButton("Add to favorites");

@@ -65,7 +65,7 @@ public class FileController {
         boolean lineFound = false;
         try{
             //removes the book
-            //TODO fix this is makes an infinite loop
+            //TODO it doesn't write the full file
             read = new BufferedReader(new InputStreamReader(new FileInputStream(getFileName(fileName))));
             while ((currentLine = read.readLine()) != null){
                 if(currentLine.contains(contentToDelete)){
@@ -76,9 +76,6 @@ public class FileController {
                 }
                 else {
                     content += content + "\n" + currentLine;
-                }
-                if(line == 6){
-                    break;
                 }
             }
         } catch (IOException e) {
