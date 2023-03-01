@@ -35,9 +35,9 @@ public class LibraryClient {
      * @return a list of books with requested data
      */
     private List<Book> formatPageContent(List<KeyPossibilities> keys, String searchResult) {
+        //Initialize book list
+        List<Book> books = new ArrayList<>();
         try {
-            //Initialize book list
-            List<Book> books = new ArrayList<>();
 
             // Map searchResult to a JsonNode
             ObjectMapper objectMapper = new ObjectMapper();
@@ -63,11 +63,9 @@ public class LibraryClient {
                 // Get Book info from primary edition json and add to books list
                 books.add(getBookInfoFromJson(keys, primaryBookJson, primaryKey, authors));
             }
-
-            // Return books list
-            return books;
         } catch (Exception ignored) { }
-        return null;
+        // Return books list
+        return books;
     }
 
     /**
