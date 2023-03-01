@@ -25,15 +25,21 @@ public class FileController {
      * @param append if you want to append to or rewrite the file
      */
     public void writeFile(String fileName, String contents, boolean append) {
+        // Create root folder if it doesn't exist
         createRootFolder();
 
+        // Declare writer
         BufferedWriter write = null;
         try {
+            // Assign writer
             write = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(getFileName(fileName), append)));
+
+            // Write the contents to the file
             write.write(contents);
         } catch (Exception ignored) {
 
         } finally {
+            // Close the writer
             closeStream(write);
         }
     }
@@ -44,17 +50,24 @@ public class FileController {
      * @return the content as a string
      */
     public String readFile(String fileName) {
+        // Declare reader and content
         BufferedReader read = null;
         StringBuilder content = new StringBuilder();
         try {
+            // Initialize reader
             read = new BufferedReader(new InputStreamReader(new FileInputStream(getFileName(fileName))));
+
+            // Read through all lines one at a time and append them to content with newline characters
             while (read.ready()) {
                 content.append(read.readLine()).append("\r\n");
             }
         } catch (Exception ignored) {
         } finally {
+            // Close the reader
             closeStream(read);
         }
+
+        // Return the content
         return content.toString();
     }
 
@@ -64,23 +77,40 @@ public class FileController {
      * @param title the title of the book data you want to delete
      */
     public void deleteFromFile(String fileName, String title) {
+        final int LINES_OF_DATA = 5;
+        if (title == null) return;
+        // Format title
         title = "Title:" + title;
+
+        //Load content
         String content = readFile(fileName);
+
+        // Find the start of the title
         int startIndex = content.indexOf(title);
+
+        // Return if not found
         if (startIndex == -1) return;
+
+        // Declare and assign endIndex variable and newLineCount
         int endIndex = startIndex;
         int newLineCount = 0;
+
         while (true) {
             try {
+                // Start searching for new line characters char by char, incrementing the endIndex variable
                 if (content.charAt(endIndex++) == '\n') {
-                    System.out.println("found newline");
+                    // Increment newLineCount
                     newLineCount++;
-                    if (newLineCount == 5) {
+
+                    // If we find enough newline characters
+                    if (newLineCount == LINES_OF_DATA) {
+                        // Replace substring of startIndex to endIndex with nothing, and rewrite the file
                         writeFile(fileName, content.replace(content.substring(startIndex, endIndex+2), ""), false);
                         return;
                     }
                 }
             } catch (IndexOutOfBoundsException e) {
+                // If there aren't enough newLine characters
                 return;
             }
         }
