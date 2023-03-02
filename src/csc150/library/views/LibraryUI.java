@@ -36,7 +36,7 @@ public class LibraryUI {
 
 
     /**
-     * creates the initial ui for the
+     * creates the initial ui
      * @param window the window that the ui is being added to
      */
     private void createInitUi(final JFrame window){
@@ -50,7 +50,8 @@ public class LibraryUI {
 
         // makes the elements
         JLabel welcome = new JLabel("Welcome to the openLibrary Client");
-        JTextField textField = new JTextField("Search for a book");
+        JTextField textField = new JTextField("Search for a book by title or author");
+        JTextField isbnTextField = new JTextField("Search for book by isbn");
 
         JButton personalLibrary = new JButton("Go to personal library");
         personalLibrary.addActionListener(e -> {
@@ -64,9 +65,25 @@ public class LibraryUI {
             displaySearch(textField.getText());
         });
 
+        JButton isbnSearch = new JButton("Search");
+        search.addActionListener(e -> {
+            try {
+                String isbn = isbnTextField.getText();
+                int isInt = Integer.parseInt(isbn);
+                displayISBNSearch(isbn);
+
+            }catch (NumberFormatException exception){
+                JOptionPane.showMessageDialog(window, "Please enter a isbn number", "ERROR", JOptionPane.ERROR_MESSAGE);
+            }
+        });
+
+
+
         // adds elements to panel
         inputPanel.add(textField);
         inputPanel.add(search);
+        inputPanel.add(isbnTextField);
+        inputPanel.add(isbnSearch);
         buttonPanel.add(personalLibrary);
         mainPanel.add(welcome);
         mainPanel.add(inputPanel);
@@ -165,6 +182,94 @@ public class LibraryUI {
         // get a list of books from the library client
         LibraryClient client = new LibraryClient();
         List<Book> books = client.search(search);
+
+        // makes a new runnable for the window
+        EventQueue.invokeLater(new Runnable() {
+            @Override
+            public void run() {
+
+                //makes the window
+                JFrame window = new JFrame("Search results");
+                window.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+
+                //makes panel and set layout
+                JPanel mainPanel = new JPanel();
+                mainPanel.setLayout(new BoxLayout(mainPanel, BoxLayout.Y_AXIS));
+                JScrollPane scrollPane = new JScrollPane(mainPanel);
+
+                //gets the search for the book and displays them
+                for (int i = 0; i < books.size(); i++) {
+                    JPanel buttonPanel = new JPanel();
+                    buttonPanel.setLayout(new FlowLayout(FlowLayout.LEFT));
+                    JTextArea textArea = new JTextArea();
+                    textArea.setEditable(false);
+                    Book book = books.get(i);
+                    textArea.setText("Title:" + book.getTitle() + "\n" + "Author: " + book.getAuthorNames() + "\n" + "Publisher: " + book.getPublisher() + "\n" + "Publish date: " + book.getPublishDate() + "\n" + "Number of pages: " + book.getNumberOfPages() + "\n\n");
+
+                    //makes the buttons that allows you to save the book
+                    JButton favorite = new JButton("Add to favorites");
+                    favorite.addActionListener(e -> {
+                        boolean append = files.doesFileExist(FileController.FAVORITES);
+                        files.writeFile(FileController.FAVORITES, textArea.getText(), append);
+                    });
+                    JButton reading = new JButton("Add to reading");
+                    reading.addActionListener(e -> {
+                        boolean append = files.doesFileExist(FileController.READING);
+                        files.writeFile(FileController.READING, textArea.getText(), append);
+                    });
+                    JButton hasRead = new JButton("Add to Has Read");
+                    hasRead.addActionListener(e -> {
+                        boolean append = files.doesFileExist(FileController.HAS_READ);
+                        files.writeFile(FileController.HAS_READ, textArea.getText(), append);
+                    });
+                    JButton planToRead = new JButton("Add to Plan To Read");
+                    planToRead.addActionListener(e -> {
+                        boolean append = files.doesFileExist(FileController.PLAN_TO_READ);
+                        files.writeFile(FileController.PLAN_TO_READ, textArea.getText(), append);
+                    });
+
+                    //set all elements to the panel
+                    buttonPanel.add(favorite);
+                    buttonPanel.add(reading);
+                    buttonPanel.add(hasRead);
+                    buttonPanel.add(planToRead);
+                    mainPanel.add(textArea);
+                    mainPanel.add(buttonPanel);
+                }
+
+                //creates an exit button
+                JButton exit = new JButton("Exit");
+                exit.addActionListener(e -> {
+                    window.dispose();
+                });
+
+                //makes a new panel just to put the exit button on the left :(
+                JPanel buttonPanel = new JPanel();
+                buttonPanel.setLayout(new FlowLayout(FlowLayout.LEFT));
+                buttonPanel.add(exit);
+                mainPanel.add(buttonPanel);
+
+                //set panel to the window
+                window.getContentPane().add(scrollPane);
+
+                //sets the size and makes window visible
+                window.setExtendedState(JFrame.MAXIMIZED_BOTH);
+                window.setVisible(true);
+            }
+        });
+    }
+
+
+    /**
+     * Makes a window showing all search results pulled from the openLibrary api
+     * @param isbn the term the user is using to search through the openLibrary api
+     */
+    private void displayISBNSearch(String isbn){
+        isbn = isbn.trim();
+
+        // get a list of books from the library client
+        LibraryClient client = new LibraryClient();
+        List<Book> books = (List<Book>) client.isbnSearch(isbn);
 
         // makes a new runnable for the window
         EventQueue.invokeLater(new Runnable() {
