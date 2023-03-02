@@ -11,6 +11,8 @@ import csc150.library.controllers.LibraryClient;
 import csc150.library.models.Book;
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.InputEvent;
+import java.awt.event.KeyEvent;
 import java.util.List;
 
 public class LibraryUI {
@@ -162,6 +164,22 @@ public class LibraryUI {
                 //sets the size and makes the window visible
                 personalLibrary.setExtendedState(JFrame.MAXIMIZED_BOTH);
                 personalLibrary.setVisible(true);
+
+                //THIS IS THE MOST FUCKED UP SOLUTION
+                try {
+                    Robot robot = new Robot();
+
+                    // Simulate a mouse click
+                    robot.mousePress(InputEvent.BUTTON1_DOWN_MASK);
+                    robot.mouseRelease(InputEvent.BUTTON1_DOWN_MASK);
+
+                    // Simulate a key press
+                    robot.keyPress(KeyEvent.VK_PAGE_UP);
+                    robot.keyRelease(KeyEvent.VK_PAGE_UP);
+
+                } catch (AWTException e) {
+                    e.printStackTrace();
+                }
             }
         });
     }
@@ -245,12 +263,27 @@ public class LibraryUI {
 
 
                 //set panel to the window
-                scrollPane.getVerticalScrollBar().setValue(0);
                 window.getContentPane().add(scrollPane);
 
                 //sets the size and makes window visible
                 window.setExtendedState(JFrame.MAXIMIZED_BOTH);
                 window.setVisible(true);
+
+                //THIS IS THE MOST FUCKED UP SOLUTION
+                try {
+                    Robot robot = new Robot();
+
+                    // Simulate a mouse click
+                    robot.mousePress(InputEvent.BUTTON1_DOWN_MASK);
+                    robot.mouseRelease(InputEvent.BUTTON1_DOWN_MASK);
+
+                    // Simulate a key press
+                    robot.keyPress(KeyEvent.VK_PAGE_UP);
+                    robot.keyRelease(KeyEvent.VK_PAGE_UP);
+
+                } catch (AWTException e) {
+                    e.printStackTrace();
+                }
             }
         });
     }
@@ -319,6 +352,7 @@ public class LibraryUI {
                     buttonPanel.add(planToRead);
                     mainPanel.add(textArea);
                     mainPanel.add(buttonPanel);
+
                 }
 
                 //creates an exit button
@@ -339,6 +373,22 @@ public class LibraryUI {
                 //sets the size and makes window visible
                 window.setExtendedState(JFrame.MAXIMIZED_BOTH);
                 window.setVisible(true);
+
+                //THIS IS THE MOST FUCKED UP SOLUTION
+                try {
+                    Robot robot = new Robot();
+
+                    // Simulate a mouse click
+                    robot.mousePress(InputEvent.BUTTON1_DOWN_MASK);
+                    robot.mouseRelease(InputEvent.BUTTON1_DOWN_MASK);
+
+                    // Simulate a key press
+                    robot.keyPress(KeyEvent.VK_PAGE_UP);
+                    robot.keyRelease(KeyEvent.VK_PAGE_UP);
+
+                } catch (AWTException e) {
+                    e.printStackTrace();
+                }
             }
         });
     }
