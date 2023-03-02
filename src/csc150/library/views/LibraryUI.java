@@ -11,6 +11,8 @@ import csc150.library.controllers.LibraryClient;
 import csc150.library.models.Book;
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.FocusEvent;
+import java.awt.event.FocusListener;
 import java.awt.event.InputEvent;
 import java.awt.event.KeyEvent;
 import java.util.List;
@@ -53,7 +55,44 @@ public class LibraryUI {
         // makes the elements
         JLabel welcome = new JLabel("Welcome to the openLibrary Client");
         JTextField textField = new JTextField("Search for a book by title or author");
-        JTextField isbnTextField = new JTextField("Search for book by isbn");
+        JTextField isbnTextField = new JTextField("Search for a book by isbn");
+
+        //
+        textField.addFocusListener(new FocusListener() {
+            @Override
+            public void focusGained(FocusEvent e) {
+                if (textField.getText().equals("Search for a book by title or author")) {
+                    textField.setText("");
+                    textField.setForeground(Color.BLACK);
+                }
+            }
+
+            @Override
+            public void focusLost(FocusEvent e) {
+                if (textField.getText().isEmpty()) {
+                    textField.setForeground(Color.GRAY);
+                    textField.setText("Search for a book by title or author");
+                }
+            }
+        });
+
+        isbnTextField.addFocusListener(new FocusListener() {
+            @Override
+            public void focusGained(FocusEvent e) {
+                if (isbnTextField.getText().equals("Search for a book by isbn")) {
+                    isbnTextField.setText("");
+                    isbnTextField.setForeground(Color.BLACK);
+                }
+            }
+
+            @Override
+            public void focusLost(FocusEvent e) {
+                if (isbnTextField.getText().isEmpty()) {
+                    isbnTextField.setForeground(Color.GRAY);
+                    isbnTextField.setText("Search for a book by isbn");
+                }
+            }
+        });
 
         JButton personalLibrary = new JButton("Go to personal library");
         personalLibrary.addActionListener(e -> {
@@ -261,7 +300,7 @@ public class LibraryUI {
                 window.setExtendedState(JFrame.MAXIMIZED_BOTH);
                 window.setVisible(true);
 
-                //THIS IS THE MOST FUCKED UP SOLUTION
+                //THIS IS THE MOST FUCKED UP SOLUTION :|
                 try {
                     Robot robot = new Robot();
 
