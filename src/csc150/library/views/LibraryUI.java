@@ -290,9 +290,9 @@ public class LibraryUI {
 
         // get a list of books from the library client
         LibraryClient client = new LibraryClient();
-        List<Book> books = (List<Book>) client.isbnSearch(isbn);
 
         // makes a new runnable for the window
+        String finalIsbn = isbn;
         EventQueue.invokeLater(new Runnable() {
             @Override
             public void run() {
@@ -307,12 +307,12 @@ public class LibraryUI {
                 JScrollPane scrollPane = new JScrollPane(mainPanel);
 
                 //gets the search for the book and displays them
-                for (int i = 0; i < books.size(); i++) {
+                for (int i = 0; i < 1; i++) {
                     JPanel buttonPanel = new JPanel();
                     buttonPanel.setLayout(new FlowLayout(FlowLayout.LEFT));
                     JTextArea textArea = new JTextArea();
                     textArea.setEditable(false);
-                    Book book = books.get(i);
+                    Book book = client.isbnSearch(finalIsbn);
                     textArea.setText("Title:" + book.getTitle() + "\n" + "Author: " + book.getAuthorNames() + "\n" + "Publisher: " + book.getPublisher() + "\n" + "Publish date: " + book.getPublishDate() + "\n" + "Number of pages: " + book.getNumberOfPages() + "\n\n");
 
                     //makes the buttons that allows you to save the book
