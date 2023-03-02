@@ -134,7 +134,7 @@ public class LibraryUI {
                     JTextArea contentTextArea = new JTextArea();
                     contentTextArea.setEditable(false);
                     if (files.doesFileExist(fileName)){
-                        contentTextArea.setText(files.readFile(FileController.FAVORITES));
+                        contentTextArea.setText(files.readFile(fileName));
                     }
                     else{
                         contentTextArea.setText("Empty");
