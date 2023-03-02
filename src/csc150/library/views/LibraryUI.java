@@ -65,16 +65,10 @@ public class LibraryUI {
             displaySearch(textField.getText());
         });
 
-        JButton isbnSearch = new JButton("Search");
-        search.addActionListener(e -> {
-            try {
+        JButton isbnSearch = new JButton("Search isbn");
+        isbnSearch.addActionListener(e -> {
                 String isbn = isbnTextField.getText();
-                int isInt = Integer.parseInt(isbn);
                 displayISBNSearch(isbn);
-
-            }catch (NumberFormatException exception){
-                JOptionPane.showMessageDialog(window, "Please enter a isbn number", "ERROR", JOptionPane.ERROR_MESSAGE);
-            }
         });
 
 
@@ -249,7 +243,9 @@ public class LibraryUI {
                 buttonPanel.add(exit);
                 mainPanel.add(buttonPanel);
 
+
                 //set panel to the window
+                scrollPane.getVerticalScrollBar().setValue(0);
                 window.getContentPane().add(scrollPane);
 
                 //sets the size and makes window visible
