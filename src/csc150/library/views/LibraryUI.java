@@ -143,18 +143,10 @@ public class LibraryUI {
                         contentTextArea.setText(files.readFile(fileName));
                     });
 
-
-                    //TODO either remove or add functionality
-                    JButton move = new JButton("Move");
-                    move.addActionListener(e -> {
-
-                    });
-
                     //sets the content to panels and adds them to main panel
                     mainPanel.add(contentLabel);
                     mainPanel.add(contentTextArea);
                     buttonPanel.add(delete);
-                    buttonPanel.add(move);
                     mainPanel.add(buttonPanel);
                 }
 
