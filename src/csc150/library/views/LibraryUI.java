@@ -57,7 +57,7 @@ public class LibraryUI {
         JTextField textField = new JTextField("Search for a book by title or author");
         JTextField isbnTextField = new JTextField("Search for a book by isbn");
 
-        //
+        //hint text for textField
         textField.addFocusListener(new FocusListener() {
             @Override
             public void focusGained(FocusEvent e) {
@@ -76,6 +76,7 @@ public class LibraryUI {
             }
         });
 
+        //hint text for textField
         isbnTextField.addFocusListener(new FocusListener() {
             @Override
             public void focusGained(FocusEvent e) {
