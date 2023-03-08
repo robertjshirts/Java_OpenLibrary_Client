@@ -314,8 +314,12 @@ public class LibraryClient {
         }
 
         // Returns first book from book list using advancedSearch method (because we expect one result from isbn)
-        return Objects.requireNonNull(
-                advancedSearch(List.of(QueryPossibilities.ISBN), List.of(isbn), keys, 1)).get(0);
+        try {
+            return Objects.requireNonNull(
+                    advancedSearch(List.of(QueryPossibilities.ISBN), List.of(isbn), keys, 1)).get(0);
+        } catch (Exception ignored) {
+            return null;
+        }
     }
 
     /**

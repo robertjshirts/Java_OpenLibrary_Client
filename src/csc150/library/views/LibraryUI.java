@@ -202,15 +202,15 @@ public class LibraryUI {
 
                     // Simulate a mouse click
                     robot.mousePress(InputEvent.BUTTON1_DOWN_MASK);
+                    robot.wait(100);
                     robot.mouseRelease(InputEvent.BUTTON1_DOWN_MASK);
 
                     // Simulate a key press
                     robot.keyPress(KeyEvent.VK_PAGE_UP);
+                    robot.wait(100);
                     robot.keyRelease(KeyEvent.VK_PAGE_UP);
 
-                } catch (AWTException e) {
-                    e.printStackTrace();
-                }
+                } catch (Exception ignored) { }
             }
         });
     }
@@ -347,13 +347,13 @@ public class LibraryUI {
 
                 //gets the search for the book and displays them
                 for (int i = 0; i < 1; i++) {
+                    Book book = client.isbnSearch(finalIsbn);
+                    if (book == null) return;
                     JPanel buttonPanel = new JPanel();
                     buttonPanel.setLayout(new FlowLayout(FlowLayout.LEFT));
                     JTextArea textArea = new JTextArea();
                     textArea.setEditable(false);
-                    Book book = client.isbnSearch(finalIsbn);
                     textArea.setText("Title:" + book.getTitle() + "\n" + "Author: " + book.getAuthorNames() + "\n" + "Publisher: " + book.getPublisher() + "\n" + "Publish date: " + book.getPublishDate() + "\n" + "Number of pages: " + book.getNumberOfPages() + "\n\n");
-
                     //makes the buttons that allows you to save the book
                     JButton favorite = new JButton("Add to favorites");
                     favorite.addActionListener(e -> {
