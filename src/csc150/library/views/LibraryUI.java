@@ -406,7 +406,7 @@ public class LibraryUI {
                 window.setExtendedState(JFrame.MAXIMIZED_BOTH);
                 window.setVisible(true);
 
-                //THIS IS THE MOST FUCKED UP SOLUTION
+                //THIS IS THE MOST F*CKED SOLUTION
                 try {
                     Robot robot = new Robot();
 
@@ -418,9 +418,7 @@ public class LibraryUI {
                     robot.keyPress(KeyEvent.VK_PAGE_UP);
                     robot.keyRelease(KeyEvent.VK_PAGE_UP);
 
-                } catch (AWTException e) {
-                    e.printStackTrace();
-                }
+                } catch (AWTException ignored) { }
             }
         });
     }

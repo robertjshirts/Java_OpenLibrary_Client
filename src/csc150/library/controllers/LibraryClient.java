@@ -214,9 +214,7 @@ public class LibraryClient {
         //searches for authors
         try {
             List<Book> books = authorSearch(searchQuery);
-            for (int i = 0; i < books.size(); i++) {
-                returnList.add(books.get(i));
-            }
+            returnList.addAll(books);
         }catch (NullPointerException e){
             System.out.println("No author found");
         }
