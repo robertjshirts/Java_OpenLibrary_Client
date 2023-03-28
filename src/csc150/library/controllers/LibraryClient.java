@@ -204,9 +204,7 @@ public class LibraryClient {
         // searches for titles
         try {
             List<Book> books = titleSearch(searchQuery);
-            for (int i = 0; i < books.size(); i++) {
-                returnList.add(books.get(i));
-            }
+            returnList.addAll(books);
         }catch (NullPointerException e){
             System.out.println("No titles found");
         }

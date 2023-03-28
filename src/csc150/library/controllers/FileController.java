@@ -7,8 +7,6 @@
 package csc150.library.controllers;
 
 import java.io.*;
-import java.util.Arrays;
-import java.util.List;
 
 public class FileController {
     //names of the files and root folder

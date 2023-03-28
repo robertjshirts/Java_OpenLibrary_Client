@@ -301,7 +301,7 @@ public class LibraryUI {
                 window.setExtendedState(JFrame.MAXIMIZED_BOTH);
                 window.setVisible(true);
 
-                //THIS IS THE MOST FUCKED UP SOLUTION :|
+                //THIS IS THE MOST F*CKED UP SOLUTION :|
                 try {
                     Robot robot = new Robot();
 
