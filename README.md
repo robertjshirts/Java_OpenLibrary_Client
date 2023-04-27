@@ -1,6 +1,6 @@
 # Book Finder
 
-This program creates a Java window that allows users to search for books based on a query or an ISBN. Users can also add books they own, have read, or are planning to read to a list.
+This program creates a Java window that allows users to search for books based on a query or an ISBN. Users can also add books they own, have read, or are planning to read to a list. These lists are stored to system memory.
 
 ## Getting Started
 
